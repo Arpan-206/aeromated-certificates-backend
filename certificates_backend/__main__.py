@@ -70,12 +70,15 @@ def create_certificate(item: schemas.CertificateCreate, secret_key: str = Header
 
 @app.get("/certificate/{cert_id}", response_model=schemas.Certificate)
 def get_certificate(cert_id: str, db: Session = Depends(get_db)):
-    db_cert = crud.get_cert(db, cert_id=cert_id)
-    cert_gen_out = cert_gen(name=db_cert.name, course=db_cert.course, yoc_director=db_cert.yoc_director,
-                                organization=db_cert.organization, organization_rep=db_cert.organization_rep, organization_rep_designation=db_cert.organization_rep_designation, cert_id=db_cert.id)
-    if db_cert is None:
-        raise HTTPException(status_code=404, detail="Certificate not found")
-    return db_cert
+    try:
+        db_cert = crud.get_cert(db, cert_id=cert_id)
+        cert_gen_out = cert_gen(name=db_cert.name, course=db_cert.course, yoc_director=db_cert.yoc_director,
+                                    organization=db_cert.organization, organization_rep=db_cert.organization_rep, organization_rep_designation=db_cert.organization_rep_designation, cert_id=db_cert.id)
+        if db_cert is None:
+            raise HTTPException(status_code=404, detail="Certificate not found")
+        return db_cert
+    except Exception as e:
+        raise HTTPException(status_code=500)
 
 
 @app.get("/certificates/", response_model=list[schemas.Certificate])
