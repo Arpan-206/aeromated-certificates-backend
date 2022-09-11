@@ -10,4 +10,6 @@ RUN chmod +x run.sh
 
 EXPOSE 80
 
+RUN ls
+
 CMD ["./run.sh"]
