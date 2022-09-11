@@ -2,7 +2,5 @@ certificates/*
 __pycache__/
 .DS_Store
 .env
-.env.*
 temp.py
 *.out
-ssl_certs/
