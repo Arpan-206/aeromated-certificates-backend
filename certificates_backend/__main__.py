@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, Request, Header
+from fastapi import Depends, FastAPI, HTTPException, Header
 from sqlalchemy.orm import Session
 
 from certificates_backend.db_files import crud, models, schemas
@@ -69,11 +69,10 @@ def create_certificate(item: schemas.CertificateCreate, secret_key: str = Header
 
 
 @app.get("/certificate/{cert_id}", response_model=schemas.Certificate)
-def get_certificate(cert_id: str, request: Request, db: Session = Depends(get_db)):
+def get_certificate(cert_id: str, db: Session = Depends(get_db)):
     db_cert = crud.get_cert(db, cert_id=cert_id)
     cert_gen_out = cert_gen(name=db_cert.name, course=db_cert.course, yoc_director=db_cert.yoc_director,
                                 organization=db_cert.organization, organization_rep=db_cert.organization_rep, organization_rep_designation=db_cert.organization_rep_designation, cert_id=db_cert.id)
-    db_cert.url = f"{str(request.url._url).replace('certificate', 'certificate-img')}.png"
     if db_cert is None:
         raise HTTPException(status_code=404, detail="Certificate not found")
     return db_cert
