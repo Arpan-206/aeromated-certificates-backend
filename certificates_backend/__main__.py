@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 
 from certificates_backend.cert.cert_gen import cert_gen
@@ -10,7 +11,13 @@ app = FastAPI(title="Aeromated Backend",
               description="Backend for the Aeromated certificates generator", version="0.1.0")
 app.mount("/certificate-img", StaticFiles(directory="certificates"),
           name="certificates")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 load_dotenv()
 # Dependency
 
