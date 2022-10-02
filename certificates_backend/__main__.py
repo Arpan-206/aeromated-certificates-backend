@@ -15,11 +15,11 @@ load_dotenv()
 # Dependency
 
 
-@app.get("/certificate")
+@app.get("/certificate/{cert_id}")
 async def get_certificate(cert_id: str):
-    res = requests.get(f"https://aeromates.hasura.app/api/rest/get-one?id={cert_id}")
+    res = requests.get(f"https://aeromates.hasura.app/api/rest/get-one?id={cert_id}", headers={'x-hasura-admin-secret': os.getenv('HASURA_ADMIN_SECRET')})
     if res.status_code == 200:
-        result = res.json()['quizzes_quizzes_by_pk"']
+        result = res.json()['quizzes_quizzes_by_pk']
         if result is None:
             raise HTTPException(status_code=404, detail="Certificate not found")
         cert_gen(result['name'], cert_id)
