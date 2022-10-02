@@ -8,6 +8,6 @@ WORKDIR /app
 
 RUN chmod +x run.sh
 
-EXPOSE $PORT
+EXPOSE 80
 
 CMD ["./run.sh"]
